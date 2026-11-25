@@ -246,6 +246,21 @@ def main() -> None:
     )
     (OUT / "staging_plans.json").write_text(json.dumps(plans_out))
     np.save(OUT / "served_distance_default.npy", served_by_k[DEFAULT_K])
+    # per-zip mean saving at the default K, for targeting
+    c = calls.assign(
+        save_min=apply_savings(calls, served_by_k[DEFAULT_K], slope),
+        km_closer=km_closer(calls, served_by_k[DEFAULT_K]),
+    )
+    by_zip = c.groupby("modzcta").agg(
+        calls=("rt", "size"),
+        today_median=("rt", "median"),
+        mean_saving_s=("save_min", "mean"),
+        km_closer=("km_closer", "mean"),
+    )
+    by_zip["mean_saving_s"] = (by_zip.mean_saving_s * 60).round(1)
+    by_zip = by_zip.join(zb.rename("borough")).sort_values("mean_saving_s", ascending=False).round(3)
+    (DOCS / "tables").mkdir(exist_ok=True)
+    by_zip.to_csv(DOCS / "tables" / f"staging_saving_by_zip_k{DEFAULT_K}.csv")
     # per-zip zip-level sanity output
     pd.DataFrame({"modzcta": z.modzcta, "borough": z.modzcta.map(zb), "d_base_km": station_d.values}).to_csv(
         OUT / "zip_base_distance.csv", index=False

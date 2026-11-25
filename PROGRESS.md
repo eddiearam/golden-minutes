@@ -54,3 +54,20 @@
 - `npm run build` passes with no errors (`tsc -b` and `eslint` clean).
 - Three screenshot review passes plus a final set: `docs/screenshots/pass1..3`, `docs/screenshots/final`, top-level copies in `docs/screenshots/`; findings and fixes in `docs/design_review.md`.
 - Deviation from DESIGN.md, recorded: the DESIGN.md secondary grey, red and green fail 4.5:1 as text on the base surface, so text uses darker values (#636366, #CE2C31, #18794E). The DESIGN.md values are kept for fills. Savings under one minute are shown in seconds, because "−0.1 min" overstates and "−0.0" hides the effect.
+
+### 8. Docs: done (2026-11-25)
+- `README.md`: problem, data, method, findings with real numbers, sensitivity, limitations (aggregated locations, unknown unit origin, crew availability not modelled, travel model approximations, reporting artefacts), the app, how to run.
+- `MEMO.md`: one page of findings, recommendations and what the data cannot tell you. Every figure comes from `docs/results/`, `docs/tables/`, `docs/simulation.md` or `docs/findings.md`; per-zip staging savings added as `docs/tables/staging_saving_by_zip_k20.csv`.
+
+## Acceptance checks (PLAN.md)
+
+| # | Check | Status |
+|---|---|---|
+| 1 | Data dictionary written; 2022-2025 rows downloaded; row counts logged | Pass: `docs/data_dictionary.md`, 6,444,090 rows, `docs/ingest_row_counts.md` |
+| 2 | Quality report with counts per rule; tests pass | Pass: `docs/data_quality.md`, 19 rules; pytest 26 passed |
+| 3 | Breakdown tables by zip, borough, hour and severity; 3 headline findings with numbers | Pass: `docs/tables/`, `docs/findings.md` |
+| 4 | Model beats the baseline on the 2025 holdout; MAE reported | Pass: zip-hour MAE 0.445 vs 0.463; block 0.930 vs 1.021; city 7.60 vs 8.44 |
+| 5 | Travel model fitted and validated; error reported | Pass: 2025 MAE 0.67 min, R² 0.01, leave-one-borough-out reported (weak fit documented) |
+| 6 | Results for K = 10/20/30 with borough split and sensitivity | Pass: `docs/simulation.md` |
+| 7 | All views and the Island working on real data; build has no errors; three screenshot review passes; screenshots saved | Pass: `docs/design_review.md`, `docs/screenshots/` |
+| 8 | README and MEMO complete with real numbers; final commit pushed | Pass |
