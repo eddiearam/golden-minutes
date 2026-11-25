@@ -206,6 +206,8 @@ def main() -> None:
     ).df()
     order = {r: i for i, r in enumerate(excl + ["rt_ok"])}
     wf = wf.sort_values("first_rule", key=lambda s: s.map(order))
+    total = int(q.loc[q.rule == "total_rows", "rows"].iloc[0])
+    assert int(wf["rows"].sum()) == total, "waterfall must account for every row"
     wf.to_csv(OUT / "quality_waterfall.csv", index=False)
 
     sev = con.execute(

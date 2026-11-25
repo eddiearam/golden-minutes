@@ -16,3 +16,8 @@
 - Data dictionary: `docs/data_dictionary.md` (31 source fields from the columns API with official descriptions, derived fields, severity mapping, disposition and call-type codes).
 - Downloaded 6,444,090 EMS rows for 2022-2025 (2022: 1,583,531; 2023: 1,617,839; 2024: 1,630,447; 2025: 1,612,273), 48 monthly Parquet files, each checked against the API count. Plus 178 MODZCTA polygons, 66 Facilities Database EMS records, 35,064 hourly weather rows.
 - Row counts: `docs/ingest_row_counts.md` and `data/out/ingest.log`.
+
+### 2. Clean: done (2026-11-25)
+- `src/clean.py` flags 19 rules (14 exclude a row from response-time analysis, 5 flag only). Report with counts per rule and a first-failing-rule waterfall: `docs/data_quality.md`.
+- 6,007,941 of 6,444,090 rows (93.2%) eligible for response-time analysis. Largest exclusions: no unit on scene (222,197 first-failing), no unit assigned (86,631), zero travel time (66,824). No duplicate incident IDs and no unparseable timestamps. 956,055 rows (14.8%) were held calls; kept and flagged.
+- Tests: `tests/test_clean.py` covers every rule, component arithmetic, duplicates and the report (21 tests); `pytest` 26 passed; `ruff` clean.
