@@ -347,10 +347,10 @@ export function MapView(p: Props) {
       {!ready && !failed && <div className="skel" style={{ position: 'absolute', inset: 0, borderRadius: 12 }} />}
       {failed && (
         <div className="map-fallback" role="status">
-          <strong>The map needs WebGL, which this browser has blocked.</strong>
+          <strong>The map needs WebGL, which this browser has turned off.</strong>
           <span>
-            Turn off privacy shields for this page or turn on hardware acceleration, then reload. The panel and charts
-            still work.
+            Turn on graphics acceleration in the browser's settings (in Brave: Settings, System), restart the browser
+            and reload. The panel and charts still work.
           </span>
         </div>
       )}

@@ -40,4 +40,4 @@ Checked: no page errors or console errors in any view; no overlapping controls a
 
 ## Follow-up: browsers that block WebGL
 
-In Brave with shields up, the map could not create its WebGL context, and the error blanked the whole page right after it drew. The map now catches the failure, as well as a lost WebGL context, and shows a short message in its place. The top bar, panel and charts keep working.
+In Brave with graphics acceleration turned off, the map could not create its WebGL context, and the error blanked the whole page right after it drew. The map now catches the failure, as well as a lost WebGL context, and shows a short message in its place. The top bar, panel and charts keep working.

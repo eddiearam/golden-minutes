@@ -1015,6 +1015,9 @@ input {
   font-size: 14px;
   line-height: 1.5;
 }
+.map-fallback > * {
+  max-width: 42ch;
+}
 .map-fallback strong {
   color: var(--text);
   font-size: 15px;
