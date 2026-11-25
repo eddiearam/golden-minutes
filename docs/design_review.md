@@ -37,3 +37,7 @@ Fixes: the third heatmap is titled "Error"; the credit text is shortened; findin
 ## Final (`docs/screenshots/final/`)
 
 Checked: no page errors or console errors in any view; no overlapping controls at 1440 x 900 or 1280 x 800. The Island moves to the far side when the hovered or selected zip lies under its centre, and fills its three-segment bar left to right. The roller animates digit by digit, and the green chip fades in only in the optimised view. Searching a zip and pressing Enter selects it, and the arrow keys move the hour slider. Text colours meet 4.5:1: secondary text uses #6E6E73 on white and #636366 on the grey base, and red and green text use the darker #CE2C31 and #18794E. The DESIGN.md red and green are kept for fills.
+
+## Follow-up: browsers that block WebGL
+
+In Brave with shields up, the map could not create its WebGL context, and the error blanked the whole page right after it drew. The map now catches the failure, as well as a lost WebGL context, and shows a short message in its place. The top bar, panel and charts keep working.

@@ -52,6 +52,7 @@ export function MapView(p: Props) {
   const box = useRef<HTMLDivElement>(null)
   const mapRef = useRef<MLMap | null>(null)
   const [ready, setReady] = useState(false)
+  const [failed, setFailed] = useState(false)
   const shown = useRef<Map<string, number | null>>(new Map())
   const anim = useRef<number>(0)
   const hoverId = useRef<string | null>(null)
@@ -77,7 +78,9 @@ export function MapView(p: Props) {
       walk((f.geometry as GeoJSON.Polygon).coordinates)
       bboxes.current.set(id, [a, b, c, d])
     }
-    const map = new maplibregl.Map({
+    let map: MLMap
+    try {
+      map = new maplibregl.Map({
       container: box.current,
       style: {
         version: 8,
@@ -95,7 +98,13 @@ export function MapView(p: Props) {
       touchPitch: false,
       attributionControl: false,
       fadeDuration: 0,
-    })
+      })
+    } catch {
+      // WebGL unavailable (blocked by a browser privacy setting or switched off): keep the rest of the page
+      setFailed(true)
+      return
+    }
+    map.getCanvas().addEventListener('webglcontextlost', () => setFailed(true))
     map.touchZoomRotate.disableRotation()
     map.keyboard.disableRotation()
     mapRef.current = map
@@ -335,7 +344,16 @@ export function MapView(p: Props) {
   return (
     <div className="map-frame">
       <div ref={box} className="map-canvas" aria-label="Map of New York City zip codes" role="region" />
-      {!ready && <div className="skel" style={{ position: 'absolute', inset: 0, borderRadius: 12 }} />}
+      {!ready && !failed && <div className="skel" style={{ position: 'absolute', inset: 0, borderRadius: 12 }} />}
+      {failed && (
+        <div className="map-fallback" role="status">
+          <strong>The map needs WebGL, which this browser has blocked.</strong>
+          <span>
+            Turn off privacy shields for this page or turn on hardware acceleration, then reload. The panel and charts
+            still work.
+          </span>
+        </div>
+      )}
       {tip && (
         <div className="tooltip" style={{ left: tip.x, top: tip.y }}>
           <strong>ZIP {tip.zip}</strong>

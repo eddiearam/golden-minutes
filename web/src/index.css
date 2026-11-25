@@ -1000,3 +1000,23 @@ input {
     transition-duration: 0.01ms !important;
   }
 }
+
+.map-fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 32px;
+  text-align: center;
+  color: var(--text-2-on-base);
+  font-size: 14px;
+  line-height: 1.5;
+}
+.map-fallback strong {
+  color: var(--text);
+  font-size: 15px;
+  font-weight: 600;
+}
