@@ -134,6 +134,17 @@ def stations() -> int:
     return n
 
 
+def hospitals() -> int:
+    out = RAW / "facdb_hospitals.json"
+    if not out.exists():
+        where = "factype in('HOSPITAL','ACUTE CARE HOSPITAL')"
+        r = _get(_session(), f"{SOCRATA}/resource/{FACDB_ID}.json", {"$where": where, "$limit": 1000})
+        out.write_text(r.text)
+    n = len(json.loads(out.read_text()))
+    log.info("FacDB hospitals: %d records", n)
+    return n
+
+
 def weather() -> int:
     out = RAW / "weather_hourly.parquet"
     if not out.exists():
@@ -170,6 +181,7 @@ def write_doc(counts: dict, months: pd.DataFrame) -> None:
         f"- EMS incidents 2022-2025: **{counts['ems_rows_total']:,}** rows",
         f"- MODZCTA polygons: {counts['modzcta_polygons']} (including the 99999 placeholder, excluded later)",
         f"- Facilities Database EMS-related records: {counts['facdb_ems_records']}",
+        f"- Facilities Database hospital records: {counts['facdb_hospital_records']}",
         f"- Hourly weather rows: {counts['weather_hours']:,}",
         "",
         "| Year | Rows |",
@@ -193,6 +205,7 @@ def main() -> None:
     counts = {
         "modzcta_polygons": modzcta(),
         "facdb_ems_records": stations(),
+        "facdb_hospital_records": hospitals(),
         "weather_hours": weather(),
     }
     months = ems_all()

@@ -7,10 +7,10 @@ Method
 - Candidates: the interior point of each of the 177 MODZCTAs.
 - Objective (demand-weighted p-median): minimise sum over zips of
   demand x modelled travel, where a zip is served from the nearer of its nearest
-  EMS station and its nearest staging point. Only the distance term of the
+  known ambulance base (EMS station or hospital) and its nearest staging point. Only the distance term of the
   travel model changes, so the objective is sum(w * b[block] * distance).
   Solved per block by greedy addition followed by pairwise swaps until no swap helps.
-- Effect on a call = b[block] x (station distance - served distance) minutes,
+- Effect on a call = b[block] x (base distance - served distance) minutes,
   subtracted from the call's observed travel time (never below 1 minute of travel).
   Today = observed 2025 response; Optimised = observed minus that saving.
 
@@ -28,7 +28,7 @@ import numpy as np
 import pandas as pd
 
 from src.config import CLEAN, OUT, TEST_YEAR
-from src.geo import dist_matrix, nearest_station_km, zips
+from src.geo import dist_matrix, nearest_base_km, zips
 from src.travel import BLOCKS, zip_borough
 
 KS = (10, 20, 30)
@@ -99,7 +99,7 @@ def demand_by_block(source: str) -> pd.DataFrame:
 
 def plan(demand: pd.DataFrame, k: int, per_block: bool = True) -> dict[int, list[int]]:
     z = zips()
-    d_sta = nearest_station_km().reindex(z.modzcta).values
+    d_sta = nearest_base_km().reindex(z.modzcta).values
     dc = dist_matrix(z.x.values, z.y.values, z.x.values, z.y.values)
     wide = demand.pivot(index="modzcta", columns="block", values="w").reindex(index=z.modzcta, columns=range(N_BLOCKS))
     wide = wide.fillna(0)
@@ -112,7 +112,7 @@ def plan(demand: pd.DataFrame, k: int, per_block: bool = True) -> dict[int, list
 def served_distance(plans: dict[int, list[int]]) -> np.ndarray:
     """Array (n_zips x N_BLOCKS) of distance to nearest station or staging point."""
     z = zips()
-    d_sta = nearest_station_km().reindex(z.modzcta).values
+    d_sta = nearest_base_km().reindex(z.modzcta).values
     dc = dist_matrix(z.x.values, z.y.values, z.x.values, z.y.values)
     out = np.empty((len(z), N_BLOCKS))
     for b in range(N_BLOCKS):
@@ -145,7 +145,7 @@ def apply_savings(
     """Per-call saving in minutes."""
     z = zips()
     zi = pd.Series(np.arange(len(z)), index=z.modzcta)
-    d_sta = nearest_station_km().reindex(z.modzcta).values
+    d_sta = nearest_base_km().reindex(z.modzcta).values
     i = zi.reindex(calls.modzcta).values
     b = calls.block.values
     hb = b % BLOCKS
@@ -203,7 +203,7 @@ def main() -> None:
         for a in (0.5, 0.75, 1.0):
             c = summarise(calls, apply_savings(calls, served, slope, availability=a))["city"]
             sens.append({"k": k, "factor": "availability", "value": a, **c})
-        for m in (0.75, 1.25):
+        for m in (0.75, 1.25, 2.0):
             c = summarise(calls, apply_savings(calls, served, slope * m))["city"]
             sens.append({"k": k, "factor": "travel_slope_multiplier", "value": m, **c})
         for src in ("actual", "history"):
@@ -220,7 +220,7 @@ def main() -> None:
     sens_df.to_csv(OUT / "sensitivity.csv", index=False)
 
     zb = zip_borough()
-    station_d = nearest_station_km()
+    station_d = nearest_base_km()
     (OUT / "simulation_results.json").write_text(
         json.dumps(
             {
@@ -228,7 +228,7 @@ def main() -> None:
                 "default_k": DEFAULT_K,
                 "results": results,
                 "slope_min_per_km_by_block": slope.tolist(),
-                "zips_with_station_within_1km": int((station_d < 1).sum()),
+                "zips_with_base_within_1km": int((station_d < 1).sum()),
             },
             indent=2,
         )
@@ -236,7 +236,7 @@ def main() -> None:
     (OUT / "staging_plans.json").write_text(json.dumps(plans_out))
     np.save(OUT / "served_distance_default.npy", served_by_k[DEFAULT_K])
     # per-zip zip-level sanity output
-    pd.DataFrame({"modzcta": z.modzcta, "borough": z.modzcta.map(zb), "d_station_km": station_d.values}).to_csv(
+    pd.DataFrame({"modzcta": z.modzcta, "borough": z.modzcta.map(zb), "d_base_km": station_d.values}).to_csv(
         OUT / "zip_station_distance.csv", index=False
     )
 

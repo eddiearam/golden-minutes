@@ -44,15 +44,17 @@ def test_travel_fit_recovers_known_coefficients():
     df = pd.DataFrame(
         {
             "hb": rng.integers(0, 6, n),
-            "d_station_km": rng.uniform(0, 6, n),
+            "d_base_km": rng.uniform(0, 6, n),
             "radius_km": rng.uniform(0.3, 2, n),
             "n": rng.integers(30, 300, n),
             "zborough": "BRONX",
+            "yr": rng.integers(2022, 2025, n),
         }
     )
-    df["travel_med"] = 3 + 0.2 * df.hb + 1.5 * df.d_station_km + 0.8 * df.radius_km
+    df["travel_med"] = 3 + 0.2 * df.hb + 1.5 * df.d_base_km + 0.8 * df.radius_km + 0.3 * (df.yr - 2022)
     beta = fit(df, boroughs=None)
     assert np.allclose(beta[6:12], 1.5, atol=1e-6)
     assert np.isclose(beta[12], 0.8, atol=1e-6)
+    assert np.isclose(beta[13], 0.3, atol=1e-6)
     s = scores(df.travel_med.values, predict(beta, df, boroughs=None), df.n.values)
     assert s["mae_min"] < 1e-6 and s["r2"] > 0.999999

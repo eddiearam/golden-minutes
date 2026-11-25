@@ -1,0 +1,115 @@
+{
+  "form": "travel_min = a[block] + b[block]*d_base_km + c*radius_km + borough effect + g*(year-2022)",
+  "distance": "zip interior point to nearest FDNY EMS station or hospital (Facilities Database)",
+  "cells_train": 3114,
+  "cells_test": 1040,
+  "calls_train": 1697462,
+  "calls_test": 575918,
+  "params": {
+    "intercept_by_block": [
+      5.25549,
+      5.60747,
+      5.43221,
+      5.64274,
+      5.60358,
+      5.1731
+    ],
+    "min_per_km_by_block": [
+      0.19922,
+      0.20918,
+      0.13021,
+      0.09948,
+      0.20602,
+      0.19083
+    ],
+    "min_per_km_radius": 0.37428,
+    "min_per_year": 0.05066,
+    "borough_effect": {
+      "BROOKLYN": -0.38908,
+      "MANHATTAN": -0.37592,
+      "QUEENS": -0.08719,
+      "RICHMOND / STATEN ISLAND": -0.6826
+    },
+    "borough_reference": "BRONX",
+    "blocks": [
+      "00:00-03:59",
+      "04:00-07:59",
+      "08:00-11:59",
+      "12:00-15:59",
+      "16:00-19:59",
+      "20:00-23:59"
+    ]
+  },
+  "train": {
+    "mae_min": 0.5337,
+    "rmse_min": 0.7184,
+    "bias_min": 0.0,
+    "r2": 0.2168
+  },
+  "test_2025": {
+    "mae_min": 0.6702,
+    "rmse_min": 0.8659,
+    "bias_min": 0.394,
+    "r2": 0.0078
+  },
+  "test_2025_reference_no_geography": {
+    "mae_min": 0.7058,
+    "rmse_min": 0.9207,
+    "bias_min": 0.3939,
+    "r2": -0.1218
+  },
+  "leave_one_borough_out_2025": {
+    "BRONX": {
+      "mae_min": 0.9192,
+      "rmse_min": 1.0853,
+      "bias_min": 0.8987,
+      "r2": -1.1114
+    },
+    "BROOKLYN": {
+      "mae_min": 0.5141,
+      "rmse_min": 0.6747,
+      "bias_min": -0.1393,
+      "r2": 0.03
+    },
+    "MANHATTAN": {
+      "mae_min": 0.6981,
+      "rmse_min": 0.849,
+      "bias_min": 0.4081,
+      "r2": -0.1764
+    },
+    "QUEENS": {
+      "mae_min": 0.9056,
+      "rmse_min": 1.1668,
+      "bias_min": 0.5139,
+      "r2": -0.1342
+    },
+    "RICHMOND / STATEN ISLAND": {
+      "mae_min": 0.5385,
+      "rmse_min": 0.7603,
+      "bias_min": -0.3627,
+      "r2": -0.5834
+    }
+  },
+  "station_only_reference": {
+    "min_per_km_by_block": [
+      0.07031,
+      0.06224,
+      0.03025,
+      -0.00116,
+      0.02276,
+      0.04153
+    ],
+    "train": {
+      "mae_min": 0.5442,
+      "rmse_min": 0.7299,
+      "bias_min": -0.0,
+      "r2": 0.1915
+    },
+    "test_2025": {
+      "mae_min": 0.6782,
+      "rmse_min": 0.88,
+      "bias_min": 0.3942,
+      "r2": -0.0247
+    }
+  }
+}

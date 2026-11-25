@@ -80,3 +80,26 @@ def nearest_station_km() -> pd.Series:
     z, s = zips(), stations()
     d = dist_matrix(z.x.values, z.y.values, s.x.values, s.y.values)
     return pd.Series(d.min(axis=1), index=z.modzcta, name="d_station_km")
+
+
+@lru_cache
+def hospitals() -> pd.DataFrame:
+    """Hospitals (Facilities Database types HOSPITAL and ACUTE CARE HOSPITAL), one row per location."""
+    df = pd.DataFrame(json.loads((RAW / "facdb_hospitals.json").read_text())).dropna(subset=["latitude"])
+    df["lat"], df["lon"] = df.latitude.astype(float), df.longitude.astype(float)
+    df = df.drop_duplicates(subset=["lat", "lon"]).reset_index(drop=True)
+    df["x"], df["y"] = to_km(df.lon.values, df.lat.values)
+    return df[["facname", "factype", "boro", "lat", "lon", "x", "y"]]
+
+
+def bases() -> pd.DataFrame:
+    """Known places an ambulance typically starts from: EMS stations and hospitals (where crews clear)."""
+    s = stations().assign(kind="EMS station")
+    h = hospitals().assign(kind="hospital")
+    return pd.concat([s, h], ignore_index=True)[["facname", "kind", "lat", "lon", "x", "y"]]
+
+
+def nearest_base_km() -> pd.Series:
+    z, b = zips(), bases()
+    d = dist_matrix(z.x.values, z.y.values, b.x.values, b.y.values)
+    return pd.Series(d.min(axis=1), index=z.modzcta, name="d_base_km")

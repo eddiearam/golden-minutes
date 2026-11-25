@@ -35,3 +35,9 @@
 - 2025 holdout MAE (`docs/results/forecast_metrics.json`): zip-hour 0.445 vs baseline 0.463 (-3.8%); zip x 4 h block 0.930 vs 1.021 (-8.8%); citywide hour 7.60 vs 8.44 (-9.9%). RMSE and Poisson deviance also favour the model (zip-hour deviance 0.80 vs 2.43).
 - Caveat recorded: at zip-hour level counts are sparse (mean 0.385), so a forecast of zero would have a lower MAE (0.385) than either; MAE is therefore also reported at block and city level, with RMSE and deviance.
 - Fallback: LightGBM unavailable (needs system libomp), so scikit-learn's histogram gradient boosting is used.
+
+### 5. Travel model: done (2026-11-25)
+- Form: travel_min = a[4 h block] + b[block] x d_base_km + c x zip radius + borough effect + g x (year - 2022), weighted least squares on median life-threatening travel time per zip x block x year (2022-2024 train, 2025 test). Distance = zip interior point to the nearest FDNY EMS station or hospital.
+- Fit (`docs/results/travel_model.json`): train MAE 0.53 min (R² 0.22); 2025 test MAE 0.67 min, RMSE 0.87, bias +0.39 min (2025 travel ran above the 2022-2024 trend), R² 0.01. A reference with no geography (block mean + year trend) scores MAE 0.71 on 2025. Leave-one-borough-out 2025 MAE 0.51-0.92 min.
+- Distance effect b = 0.10-0.21 min per km (lowest midday, highest overnight and evening).
+- Blocker and fallback: the data has no origin for the responding unit, and station distance alone was a weak proxy (b = -0.00 to 0.07 min/km, test MAE 0.68; kept as `station_only_reference`). Hospitals were added because crews often respond as they clear a hospital. Because the proxy is noisy, b is probably understated; the simulation adds a x2 slope scenario to its sensitivity analysis.
