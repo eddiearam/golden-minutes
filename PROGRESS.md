@@ -29,3 +29,9 @@
   1. Life-threatening median response 7.4 min in 2025 (p90 13.2) vs 6.8 (p90 11.8) in 2022; travel +0.5 min is most of the rise (call handling +0.1, dispatch -0.0).
   2. 5.2% of 2025 life-threatening calls were held; held median 9.5 min (p90 19.6) vs 7.3 (p90 12.9) not held. Of the 3.7 min gap in mean response, 2.2 min (60%) is travel.
   3. Of 173 zips with 200+ life-threatening calls in 2025, the 10 slowest had median 9.4 min vs 5.8 min for the 10 fastest (slowest 10464 at 11.8). Slowest hour of week Fri 18:00 (median 8.6, p90 15.7); fastest Tue 00:00 (6.4).
+
+### 4. Forecast: done (2026-11-25)
+- Hourly life-threatening demand for 177 zips. Baseline = mean of the same hour over the previous 4 weeks. Model = scikit-learn HistGradientBoostingRegressor (Poisson loss) with zip, hour, weekday, hour of week, month, NY holidays, hourly weather and demand lags of 1-4 weeks plus a lagged weekly mean (one-week-ahead forecast). Train 2022-01-29 to 2024-12-31 (4,536,864 zip-hours), test 2025 (1,550,520 zip-hours, 597,683 calls).
+- 2025 holdout MAE (`docs/results/forecast_metrics.json`): zip-hour 0.445 vs baseline 0.463 (-3.8%); zip x 4 h block 0.930 vs 1.021 (-8.8%); citywide hour 7.60 vs 8.44 (-9.9%). RMSE and Poisson deviance also favour the model (zip-hour deviance 0.80 vs 2.43).
+- Caveat recorded: at zip-hour level counts are sparse (mean 0.385), so a forecast of zero would have a lower MAE (0.385) than either; MAE is therefore also reported at block and city level, with RMSE and deviance.
+- Fallback: LightGBM unavailable (needs system libomp), so scikit-learn's histogram gradient boosting is used.

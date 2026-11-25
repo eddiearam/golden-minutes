@@ -1,0 +1,138 @@
+[
+  {
+    "id": "trend",
+    "title": "Life-threatening response times, 2022 vs 2025",
+    "numbers": {
+      "median_2022_min": 6.8,
+      "median_2025_min": 7.383,
+      "p90_2022_min": 11.817,
+      "p90_2025_min": 13.233,
+      "median_change_by_component_min": {
+        "call_handling": 0.067,
+        "dispatch": -0.017,
+        "travel": 0.467,
+        "response": 0.583
+      },
+      "calls_2022": 554211,
+      "calls_2025": 581682
+    },
+    "text": "Median response to life-threatening calls was 7.4 min in 2025 (90th percentile 13.2 min) versus 6.8 min (p90 11.8) in 2022. Change in the median by component: call handling +0.1, dispatch -0.0, travel +0.5 min."
+  },
+  {
+    "id": "held",
+    "title": "Held calls and the long tail",
+    "numbers": {
+      "held_share_2025": 0.0522,
+      "held_median_min": 9.517,
+      "held_p90_min": 19.617,
+      "not_held_median_min": 7.3,
+      "not_held_p90_min": 12.9,
+      "mean_gap_min": 3.662,
+      "mean_gap_by_stage_min": {
+        "call_handling": 1.335,
+        "dispatch": 0.129,
+        "travel": 2.198
+      },
+      "largest_stage": "travel"
+    },
+    "text": "In 2025, 5.2% of life-threatening calls were held (no unit could be assigned immediately). Held calls had a median response of 9.5 min and p90 19.6 min, against 7.3 and 12.9 min for calls not held. Of the 3.7 min gap in mean response, 2.2 min (60%) is travel."
+  },
+  {
+    "id": "where_when",
+    "title": "Where and when it breaks down",
+    "numbers": {
+      "zips_ranked": 173,
+      "worst10": [
+        {
+          "modzcta": "10464",
+          "n": 350,
+          "response_med": 11.842,
+          "response_p90": 18.18,
+          "travel_med": 10.408,
+          "call_handling_med": 0.533
+        },
+        {
+          "modzcta": "10044",
+          "n": 633,
+          "response_med": 10.6,
+          "response_p90": 19.147,
+          "travel_med": 9.65,
+          "call_handling_med": 0.417
+        },
+        {
+          "modzcta": "10307",
+          "n": 526,
+          "response_med": 10.05,
+          "response_p90": 14.608,
+          "travel_med": 9.2,
+          "call_handling_med": 0.242
+        },
+        {
+          "modzcta": "11356",
+          "n": 859,
+          "response_med": 10.033,
+          "response_p90": 16.37,
+          "travel_med": 8.983,
+          "call_handling_med": 0.35
+        },
+        {
+          "modzcta": "10474",
+          "n": 1928,
+          "response_med": 9.517,
+          "response_p90": 15.477,
+          "travel_med": 8.208,
+          "call_handling_med": 0.533
+        },
+        {
+          "modzcta": "10471",
+          "n": 1244,
+          "response_med": 9.308,
+          "response_p90": 18.217,
+          "travel_med": 8.017,
+          "call_handling_med": 0.475
+        },
+        {
+          "modzcta": "10475",
+          "n": 2723,
+          "response_med": 9.283,
+          "response_p90": 15.547,
+          "travel_med": 8.017,
+          "call_handling_med": 0.467
+        },
+        {
+          "modzcta": "11436",
+          "n": 1037,
+          "response_med": 9.1,
+          "response_p90": 15.107,
+          "travel_med": 7.917,
+          "call_handling_med": 0.467
+        },
+        {
+          "modzcta": "11101",
+          "n": 4310,
+          "response_med": 9.083,
+          "response_p90": 15.9,
+          "travel_med": 8.05,
+          "call_handling_med": 0.367
+        },
+        {
+          "modzcta": "11414",
+          "n": 1276,
+          "response_med": 9.05,
+          "response_p90": 17.692,
+          "travel_med": 8.067,
+          "call_handling_med": 0.4
+        }
+      ],
+      "best10_median_of_medians": 5.775,
+      "worst10_median_of_medians": 9.412,
+      "worst10_travel_share": 0.883,
+      "peak_how": "Fri 18:00",
+      "peak_median_min": 8.633,
+      "peak_p90_min": 15.7,
+      "trough_how": "Tue 00:00",
+      "trough_median_min": 6.383
+    },
+    "text": "Across 173 zips with at least 200 life-threatening calls in 2025, the 10 slowest had a median response of 9.4 min versus 5.8 min for the 10 fastest (slowest: 10464, 11.8 min). By hour of week the slowest hour was Fri 18:00 (median 8.6 min, p90 15.7) and the fastest Tue 00:00 (6.4 min)."
+  }
+]

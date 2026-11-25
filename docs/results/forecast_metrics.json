@@ -1,0 +1,61 @@
+{
+  "train_rows": 4536864,
+  "test_rows": 1550520,
+  "zips": 177,
+  "train_period": [
+    "2022-01-29 00:00:00",
+    "2024-12-31 23:00:00"
+  ],
+  "test_period": [
+    "2025-01-01 00:00:00",
+    "2025-12-31 23:00:00"
+  ],
+  "test_total_calls": 597683.0,
+  "n_iter": 185,
+  "mae_zip_hour": {
+    "model": 0.44486,
+    "baseline": 0.46259,
+    "improvement_pct": 3.83,
+    "mean_actual": 0.38547,
+    "zero_forecast_mae": 0.38547
+  },
+  "rmse_zip_hour": {
+    "model": 0.62811,
+    "baseline": 0.70123
+  },
+  "poisson_deviance_zip_hour": {
+    "model": 0.80255,
+    "baseline": 2.42832
+  },
+  "mae_zip_4h_block": {
+    "model": 0.93048,
+    "baseline": 1.02052,
+    "improvement_pct": 8.82,
+    "mean_actual": 1.54189,
+    "zero_forecast_mae": 1.54189
+  },
+  "rmse_zip_4h_block": {
+    "model": 1.27399,
+    "baseline": 1.41819
+  },
+  "poisson_deviance_zip_4h_block": {
+    "model": 1.08491,
+    "baseline": 1.95094
+  },
+  "mae_city_hour": {
+    "model": 7.60158,
+    "baseline": 8.43958,
+    "improvement_pct": 9.93,
+    "mean_actual": 68.22865,
+    "zero_forecast_mae": 68.22865
+  },
+  "rmse_city_hour": {
+    "model": 9.85918,
+    "baseline": 10.96545
+  },
+  "poisson_deviance_city_hour": {
+    "model": 1.40769,
+    "baseline": 1.72085
+  },
+  "model_beats_baseline": true
+}

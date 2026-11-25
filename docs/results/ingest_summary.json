@@ -1,0 +1,12 @@
+{
+  "modzcta_polygons": 178,
+  "facdb_ems_records": 66,
+  "weather_hours": 35064,
+  "ems_rows_total": 6444090,
+  "ems_rows_by_year": {
+    "2022": 1583531,
+    "2023": 1617839,
+    "2024": 1630447,
+    "2025": 1612273
+  }
+}

@@ -56,7 +56,7 @@ def add_features(panel: pd.DataFrame) -> pd.DataFrame:
     # recent level: mean of the 168 hours ending one week before the target hour
     p["roll168_lag168"] = g.transform(lambda s: s.shift(168).rolling(168, min_periods=84).mean()).astype("float32")
     p["hour"] = p.ts.dt.hour.astype("int8")
-    p["dow"] = p.ts.dt.dayofweek.astype("int8")
+    p["dow"] = p.ts.dt.day_of_week.astype("int8")
     p["how"] = (p.dow.astype(int) * 24 + p.hour).astype("int16")
     p["month"] = p.ts.dt.month.astype("int8")
     p["year"] = p.ts.dt.year.astype("int16")
@@ -90,6 +90,17 @@ FEATURES = [
 
 def mae(a: np.ndarray, b: np.ndarray) -> float:
     return float(np.mean(np.abs(a - b)))
+
+
+def rmse(a: np.ndarray, b: np.ndarray) -> float:
+    return float(np.sqrt(np.mean((a - b) ** 2)))
+
+
+def poisson_deviance(y: np.ndarray, mu: np.ndarray) -> float:
+    mu = np.clip(mu, 1e-6, None)
+    with np.errstate(divide="ignore", invalid="ignore"):
+        t = np.where(y > 0, y * np.log(y / mu), 0.0)
+    return float(np.mean(2 * (t - (y - mu))))
 
 
 def main() -> None:
@@ -131,12 +142,19 @@ def main() -> None:
     }
     for name, keys in levels.items():
         agg = test.groupby(keys)[["y", "pred", "baseline"]].sum()
-        m, b = mae(agg.y.values, agg.pred.values), mae(agg.y.values, agg.baseline.values)
+        y, pr, bl = agg.y.values, agg.pred.values, agg.baseline.values
+        m, b = mae(y, pr), mae(y, bl)
         res[f"mae_{name}"] = {
             "model": round(m, 5),
             "baseline": round(b, 5),
             "improvement_pct": round(100 * (b - m) / b, 2),
-            "mean_actual": round(float(agg.y.mean()), 5),
+            "mean_actual": round(float(y.mean()), 5),
+            "zero_forecast_mae": round(float(np.abs(y).mean()), 5),
+        }
+        res[f"rmse_{name}"] = {"model": round(rmse(y, pr), 5), "baseline": round(rmse(y, bl), 5)}
+        res[f"poisson_deviance_{name}"] = {
+            "model": round(poisson_deviance(y, pr), 5),
+            "baseline": round(poisson_deviance(y, bl), 5),
         }
     res["model_beats_baseline"] = res["mae_zip_hour"]["model"] < res["mae_zip_hour"]["baseline"]
     (OUT / "forecast_metrics.json").write_text(json.dumps(res, indent=2))
