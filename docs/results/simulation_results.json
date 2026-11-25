@@ -1,0 +1,265 @@
+{
+  "ks": [
+    10,
+    20,
+    30
+  ],
+  "default_k": 20,
+  "results": {
+    "10": {
+      "city": {
+        "calls": 576332,
+        "today_median": 7.367,
+        "today_p90": 13.2,
+        "opt_median": 7.333,
+        "opt_p90": 13.167,
+        "median_saved": 0.033,
+        "p90_saved": 0.033,
+        "mean_saving_per_call": 0.043,
+        "share_calls_improved": 0.1293,
+        "total_minutes_saved": 24747.7,
+        "mean_km_closer": 0.263
+      },
+      "borough": {
+        "BRONX": {
+          "calls": 138796,
+          "today_median": 7.967,
+          "today_p90": 13.967,
+          "opt_median": 7.95,
+          "opt_p90": 13.95,
+          "median_saved": 0.017,
+          "p90_saved": 0.017,
+          "mean_saving_per_call": 0.017,
+          "share_calls_improved": 0.0917,
+          "total_minutes_saved": 2420.9,
+          "mean_km_closer": 0.105
+        },
+        "BROOKLYN": {
+          "calls": 157844,
+          "today_median": 6.883,
+          "today_p90": 11.967,
+          "opt_median": 6.833,
+          "opt_p90": 11.9,
+          "median_saved": 0.05,
+          "p90_saved": 0.067,
+          "mean_saving_per_call": 0.058,
+          "share_calls_improved": 0.1848,
+          "total_minutes_saved": 9128.9,
+          "mean_km_closer": 0.35
+        },
+        "MANHATTAN": {
+          "calls": 137831,
+          "today_median": 7.217,
+          "today_p90": 13.467,
+          "opt_median": 7.217,
+          "opt_p90": 13.467,
+          "median_saved": 0.0,
+          "p90_saved": 0.0,
+          "mean_saving_per_call": 0.0,
+          "share_calls_improved": 0.002,
+          "total_minutes_saved": 36.4,
+          "mean_km_closer": 0.001
+        },
+        "QUEENS": {
+          "calls": 115904,
+          "today_median": 7.633,
+          "today_p90": 13.783,
+          "opt_median": 7.55,
+          "opt_p90": 13.716,
+          "median_saved": 0.083,
+          "p90_saved": 0.068,
+          "mean_saving_per_call": 0.089,
+          "share_calls_improved": 0.2177,
+          "total_minutes_saved": 10359.9,
+          "mean_km_closer": 0.546
+        },
+        "RICHMOND / STATEN ISLAND": {
+          "calls": 25957,
+          "today_median": 7.067,
+          "today_p90": 12.05,
+          "opt_median": 6.967,
+          "opt_p90": 11.95,
+          "median_saved": 0.1,
+          "p90_saved": 0.1,
+          "mean_saving_per_call": 0.108,
+          "share_calls_improved": 0.2744,
+          "total_minutes_saved": 2801.6,
+          "mean_km_closer": 0.705
+        }
+      }
+    },
+    "20": {
+      "city": {
+        "calls": 576332,
+        "today_median": 7.367,
+        "today_p90": 13.2,
+        "opt_median": 7.3,
+        "opt_p90": 13.133,
+        "median_saved": 0.067,
+        "p90_saved": 0.067,
+        "mean_saving_per_call": 0.071,
+        "share_calls_improved": 0.242,
+        "total_minutes_saved": 40780.5,
+        "mean_km_closer": 0.434
+      },
+      "borough": {
+        "BRONX": {
+          "calls": 138796,
+          "today_median": 7.967,
+          "today_p90": 13.967,
+          "opt_median": 7.918,
+          "opt_p90": 13.914,
+          "median_saved": 0.048,
+          "p90_saved": 0.053,
+          "mean_saving_per_call": 0.048,
+          "share_calls_improved": 0.2652,
+          "total_minutes_saved": 6603.5,
+          "mean_km_closer": 0.292
+        },
+        "BROOKLYN": {
+          "calls": 157844,
+          "today_median": 6.883,
+          "today_p90": 11.967,
+          "opt_median": 6.8,
+          "opt_p90": 11.883,
+          "median_saved": 0.083,
+          "p90_saved": 0.083,
+          "mean_saving_per_call": 0.08,
+          "share_calls_improved": 0.2661,
+          "total_minutes_saved": 12687.8,
+          "mean_km_closer": 0.491
+        },
+        "MANHATTAN": {
+          "calls": 137831,
+          "today_median": 7.217,
+          "today_p90": 13.467,
+          "opt_median": 7.208,
+          "opt_p90": 13.44,
+          "median_saved": 0.009,
+          "p90_saved": 0.027,
+          "mean_saving_per_call": 0.015,
+          "share_calls_improved": 0.0943,
+          "total_minutes_saved": 2074.7,
+          "mean_km_closer": 0.095
+        },
+        "QUEENS": {
+          "calls": 115904,
+          "today_median": 7.633,
+          "today_p90": 13.783,
+          "opt_median": 7.505,
+          "opt_p90": 13.65,
+          "median_saved": 0.128,
+          "p90_saved": 0.133,
+          "mean_saving_per_call": 0.135,
+          "share_calls_improved": 0.3349,
+          "total_minutes_saved": 15683.3,
+          "mean_km_closer": 0.822
+        },
+        "RICHMOND / STATEN ISLAND": {
+          "calls": 25957,
+          "today_median": 7.067,
+          "today_p90": 12.05,
+          "opt_median": 6.932,
+          "opt_p90": 11.9,
+          "median_saved": 0.134,
+          "p90_saved": 0.15,
+          "mean_saving_per_call": 0.144,
+          "share_calls_improved": 0.3414,
+          "total_minutes_saved": 3731.3,
+          "mean_km_closer": 0.902
+        }
+      }
+    },
+    "30": {
+      "city": {
+        "calls": 576332,
+        "today_median": 7.367,
+        "today_p90": 13.2,
+        "opt_median": 7.277,
+        "opt_p90": 13.101,
+        "median_saved": 0.089,
+        "p90_saved": 0.099,
+        "mean_saving_per_call": 0.094,
+        "share_calls_improved": 0.3455,
+        "total_minutes_saved": 54153.0,
+        "mean_km_closer": 0.575
+      },
+      "borough": {
+        "BRONX": {
+          "calls": 138796,
+          "today_median": 7.967,
+          "today_p90": 13.967,
+          "opt_median": 7.882,
+          "opt_p90": 13.867,
+          "median_saved": 0.085,
+          "p90_saved": 0.1,
+          "mean_saving_per_call": 0.089,
+          "share_calls_improved": 0.4766,
+          "total_minutes_saved": 12308.9,
+          "mean_km_closer": 0.535
+        },
+        "BROOKLYN": {
+          "calls": 157844,
+          "today_median": 6.883,
+          "today_p90": 11.967,
+          "opt_median": 6.783,
+          "opt_p90": 11.867,
+          "median_saved": 0.1,
+          "p90_saved": 0.1,
+          "mean_saving_per_call": 0.095,
+          "share_calls_improved": 0.3357,
+          "total_minutes_saved": 14983.2,
+          "mean_km_closer": 0.579
+        },
+        "MANHATTAN": {
+          "calls": 137831,
+          "today_median": 7.217,
+          "today_p90": 13.467,
+          "opt_median": 7.2,
+          "opt_p90": 13.433,
+          "median_saved": 0.017,
+          "p90_saved": 0.033,
+          "mean_saving_per_call": 0.023,
+          "share_calls_improved": 0.1462,
+          "total_minutes_saved": 3220.2,
+          "mean_km_closer": 0.145
+        },
+        "QUEENS": {
+          "calls": 115904,
+          "today_median": 7.633,
+          "today_p90": 13.783,
+          "opt_median": 7.49,
+          "opt_p90": 13.633,
+          "median_saved": 0.143,
+          "p90_saved": 0.15,
+          "mean_saving_per_call": 0.151,
+          "share_calls_improved": 0.3896,
+          "total_minutes_saved": 17521.4,
+          "mean_km_closer": 0.927
+        },
+        "RICHMOND / STATEN ISLAND": {
+          "calls": 25957,
+          "today_median": 7.067,
+          "today_p90": 12.05,
+          "opt_median": 6.841,
+          "opt_p90": 11.798,
+          "median_saved": 0.226,
+          "p90_saved": 0.252,
+          "mean_saving_per_call": 0.236,
+          "share_calls_improved": 0.5654,
+          "total_minutes_saved": 6119.4,
+          "mean_km_closer": 1.47
+        }
+      }
+    }
+  },
+  "slope_min_per_km_by_block": [
+    0.19922,
+    0.20918,
+    0.13021,
+    0.09948,
+    0.20602,
+    0.19083
+  ],
+  "zips_with_base_within_1km": 68
+}
