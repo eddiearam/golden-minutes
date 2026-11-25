@@ -21,3 +21,11 @@
 - `src/clean.py` flags 19 rules (14 exclude a row from response-time analysis, 5 flag only). Report with counts per rule and a first-failing-rule waterfall: `docs/data_quality.md`.
 - 6,007,941 of 6,444,090 rows (93.2%) eligible for response-time analysis. Largest exclusions: no unit on scene (222,197 first-failing), no unit assigned (86,631), zero travel time (66,824). No duplicate incident IDs and no unparseable timestamps. 956,055 rows (14.8%) were held calls; kept and flagged.
 - Tests: `tests/test_clean.py` covers every rule, component arithmetic, duplicates and the report (21 tests); `pytest` 26 passed; `ruff` clean.
+
+### 3. Decompose: done (2026-11-25)
+- Response = call handling (created → assigned) + dispatch (assigned → en route) + travel (en route → on scene), from the dataset's own timestamps. Life-threatening = initial segment 1-3 (mapping in `docs/data_dictionary.md`).
+- Tables by year, borough, zip, hour of week, severity segment and held status: `docs/tables/*.csv`; summary in `docs/findings.md`.
+- Headline findings (from `data/out/findings.json`):
+  1. Life-threatening median response 7.4 min in 2025 (p90 13.2) vs 6.8 (p90 11.8) in 2022; travel +0.5 min is most of the rise (call handling +0.1, dispatch -0.0).
+  2. 5.2% of 2025 life-threatening calls were held; held median 9.5 min (p90 19.6) vs 7.3 (p90 12.9) not held. Of the 3.7 min gap in mean response, 2.2 min (60%) is travel.
+  3. Of 173 zips with 200+ life-threatening calls in 2025, the 10 slowest had median 9.4 min vs 5.8 min for the 10 fastest (slowest 10464 at 11.8). Slowest hour of week Fri 18:00 (median 8.6, p90 15.7); fastest Tue 00:00 (6.4).
