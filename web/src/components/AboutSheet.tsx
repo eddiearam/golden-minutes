@@ -86,11 +86,19 @@ export function AboutSheet({ summary, onClose }: { summary: Summary; onClose: ()
           same-hour four-week average.
         </p>
         <p>
-          A travel model links each zip's travel time to its distance from the nearest EMS station or hospital (crews
-          often take the next call as they leave a hospital), its size, the time of day, its borough and the year (2025 error {summary.travel.mae_min.toFixed(2)} min per zip and time block, R²{' '}
-          {summary.travel.r2.toFixed(2)}). For each four-hour block of the week, staging points are chosen among zip
-          centres to minimise forecast demand × modelled travel. The optimised view subtracts the modelled travel saving
-          from each real 2025 call.
+          Ambulance workload: every assigned job runs from the first unit assigned to the incident closing. For each
+          life-threatening call we count how many ambulances in its borough were busy at that minute, and compare it
+          only with calls in the same borough, hour of week and day. Each extra busy ambulance adds about 2.4 seconds,
+          mostly as longer travel, and busy ambulances in another borough make no difference. The plan treats one more
+          ambulance on duty, or one freed by shorter hospital handover (transports per hour × minutes saved), as one
+          fewer busy ambulance.
+        </p>
+        <p>
+          Staging: a travel model links each zip's travel time to its distance from the nearest EMS station or hospital,
+          its size, the time of day, its borough and the year (2025 error {summary.travel.mae_min.toFixed(2)} min per
+          zip and time block, R² {summary.travel.r2.toFixed(2)}). For each four-hour block of the week, staging points
+          are chosen among zip centres to minimise forecast demand × modelled travel, and the modelled travel saving is
+          taken off each real 2025 call.
         </p>
 
         <h3>Limitations</h3>
@@ -102,13 +110,16 @@ export function AboutSheet({ summary, onClose }: { summary: Summary; onClose: ()
             probably understates how much distance matters.
           </li>
           <li>
-            Crew availability is not modelled: the optimised view assumes a staged ambulance is free when a call
-            arrives, and that moving it does not slow other calls. The README's sensitivity table shows results when it
-            is free only half the time.
+            The plan's savings come from short-run swings in workload. A permanent change could shift how dispatchers
+            hold calls or where crews wait, so treat the figures as the expected direction and size, not a guarantee.
           </li>
           <li>
-            {pct(q.held_share_lt, 1)} of life-threatening calls in 2025 were held waiting for a free unit. Staging
-            cannot fix that delay without more units.
+            Only the first unit on each incident is recorded, so busy counts are first-unit jobs. The plan is capped
+            within the range of workload swings the data covers.
+          </li>
+          <li>
+            Staging assumes the staged ambulance is free when a call arrives, and that moving it does not slow other
+            calls. {pct(q.held_share_lt, 1)} of life-threatening calls in 2025 were held waiting for a free unit.
           </li>
           <li>
             Timestamps are entered by crews and dispatchers; some records are late, missing or out of order (see the

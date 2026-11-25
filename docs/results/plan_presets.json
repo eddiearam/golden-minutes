@@ -1,0 +1,366 @@
+{
+ "hospital": {
+  "plan": {
+   "units": {
+    "BRONX": [
+     0,
+     0,
+     0
+    ],
+    "BROOKLYN": [
+     0,
+     0,
+     0
+    ],
+    "MANHATTAN": [
+     0,
+     0,
+     0
+    ],
+    "QUEENS": [
+     0,
+     0,
+     0
+    ],
+    "RICHMOND / STATEN ISLAND": [
+     0,
+     0,
+     0
+    ]
+   },
+   "cut": 10,
+   "staging": false
+  },
+  "lt_mean_saved_s": 11.1,
+  "lt_mean_saved_s_95ci": [
+   9.9,
+   12.2
+  ],
+  "lt_median_before_min": 7.367,
+  "lt_median_after_min": 7.183,
+  "lt_median_saved_s": 11.1,
+  "lt_p90_saved_s": 11.2,
+  "other_mean_saved_s": 93.4,
+  "held_lt": [
+   0.0522,
+   0.0454
+  ],
+  "held_other": [
+   0.29,
+   0.25
+  ],
+  "ambulances_freed_weekday_15_19_by_handover": 22.4
+ },
+ "ambulances": {
+  "plan": {
+   "units": {
+    "BRONX": [
+     3,
+     3,
+     0
+    ],
+    "BROOKLYN": [
+     0,
+     3,
+     0
+    ],
+    "MANHATTAN": [
+     3,
+     3,
+     0
+    ],
+    "QUEENS": [
+     0,
+     0,
+     0
+    ],
+    "RICHMOND / STATEN ISLAND": [
+     0,
+     0,
+     0
+    ]
+   },
+   "cut": 0,
+   "staging": false
+  },
+  "lt_mean_saved_s": 3.6,
+  "lt_mean_saved_s_95ci": [
+   3.2,
+   3.9
+  ],
+  "lt_median_before_min": 7.367,
+  "lt_median_after_min": 7.308,
+  "lt_median_saved_s": 3.5,
+  "lt_p90_saved_s": 4,
+  "other_mean_saved_s": 31.2,
+  "held_lt": [
+   0.0522,
+   0.0501
+  ],
+  "held_other": [
+   0.29,
+   0.278
+  ],
+  "ambulances_freed_weekday_15_19_by_handover": 0
+ },
+ "staging": {
+  "plan": {
+   "units": {
+    "BRONX": [
+     0,
+     0,
+     0
+    ],
+    "BROOKLYN": [
+     0,
+     0,
+     0
+    ],
+    "MANHATTAN": [
+     0,
+     0,
+     0
+    ],
+    "QUEENS": [
+     0,
+     0,
+     0
+    ],
+    "RICHMOND / STATEN ISLAND": [
+     0,
+     0,
+     0
+    ]
+   },
+   "cut": 0,
+   "staging": true
+  },
+  "lt_mean_saved_s": 4.2,
+  "lt_mean_saved_s_95ci": [
+   4.2,
+   4.2
+  ],
+  "lt_median_before_min": 7.367,
+  "lt_median_after_min": 7.299,
+  "lt_median_saved_s": 4.1,
+  "lt_p90_saved_s": 4.3,
+  "other_mean_saved_s": 4.3,
+  "held_lt": [
+   0.0522,
+   0.0522
+  ],
+  "held_other": [
+   0.29,
+   0.29
+  ],
+  "ambulances_freed_weekday_15_19_by_handover": 0
+ },
+ "combined": {
+  "plan": {
+   "units": {
+    "BRONX": [
+     3,
+     3,
+     0
+    ],
+    "BROOKLYN": [
+     0,
+     3,
+     0
+    ],
+    "MANHATTAN": [
+     3,
+     3,
+     0
+    ],
+    "QUEENS": [
+     0,
+     0,
+     0
+    ],
+    "RICHMOND / STATEN ISLAND": [
+     0,
+     0,
+     0
+    ]
+   },
+   "cut": 10,
+   "staging": true
+  },
+  "lt_mean_saved_s": 18.9,
+  "lt_mean_saved_s_95ci": [
+   17.4,
+   20.4
+  ],
+  "lt_median_before_min": 7.367,
+  "lt_median_after_min": 7.058,
+  "lt_median_saved_s": 18.5,
+  "lt_p90_saved_s": 19.5,
+  "other_mean_saved_s": 128.9,
+  "held_lt": [
+   0.0522,
+   0.0433
+  ],
+  "held_other": [
+   0.29,
+   0.238
+  ],
+  "ambulances_freed_weekday_15_19_by_handover": 22.4
+ },
+ "one_everywhere": {
+  "plan": {
+   "units": {
+    "BRONX": [
+     1,
+     1,
+     1
+    ],
+    "BROOKLYN": [
+     1,
+     1,
+     1
+    ],
+    "MANHATTAN": [
+     1,
+     1,
+     1
+    ],
+    "QUEENS": [
+     1,
+     1,
+     1
+    ],
+    "RICHMOND / STATEN ISLAND": [
+     1,
+     1,
+     1
+    ]
+   },
+   "cut": 0,
+   "staging": false
+  },
+  "lt_mean_saved_s": 2.7,
+  "lt_mean_saved_s_95ci": [
+   2.4,
+   3
+  ],
+  "lt_median_before_min": 7.367,
+  "lt_median_after_min": 7.322,
+  "lt_median_saved_s": 2.7,
+  "lt_p90_saved_s": 2.7,
+  "other_mean_saved_s": 21.5,
+  "held_lt": [
+   0.0522,
+   0.0507
+  ],
+  "held_other": [
+   0.29,
+   0.2813
+  ],
+  "ambulances_freed_weekday_15_19_by_handover": 0
+ },
+ "handover_5": {
+  "plan": {
+   "units": {
+    "BRONX": [
+     0,
+     0,
+     0
+    ],
+    "BROOKLYN": [
+     0,
+     0,
+     0
+    ],
+    "MANHATTAN": [
+     0,
+     0,
+     0
+    ],
+    "QUEENS": [
+     0,
+     0,
+     0
+    ],
+    "RICHMOND / STATEN ISLAND": [
+     0,
+     0,
+     0
+    ]
+   },
+   "cut": 5,
+   "staging": false
+  },
+  "lt_mean_saved_s": 5.5,
+  "lt_mean_saved_s_95ci": [
+   5,
+   6.1
+  ],
+  "lt_median_before_min": 7.367,
+  "lt_median_after_min": 7.275,
+  "lt_median_saved_s": 5.5,
+  "lt_p90_saved_s": 5.6,
+  "other_mean_saved_s": 46.7,
+  "held_lt": [
+   0.0522,
+   0.0488
+  ],
+  "held_other": [
+   0.29,
+   0.27
+  ],
+  "ambulances_freed_weekday_15_19_by_handover": 11.2
+ },
+ "handover_15": {
+  "plan": {
+   "units": {
+    "BRONX": [
+     0,
+     0,
+     0
+    ],
+    "BROOKLYN": [
+     0,
+     0,
+     0
+    ],
+    "MANHATTAN": [
+     0,
+     0,
+     0
+    ],
+    "QUEENS": [
+     0,
+     0,
+     0
+    ],
+    "RICHMOND / STATEN ISLAND": [
+     0,
+     0,
+     0
+    ]
+   },
+   "cut": 15,
+   "staging": false
+  },
+  "lt_mean_saved_s": 16.6,
+  "lt_mean_saved_s_95ci": [
+   14.9,
+   18.3
+  ],
+  "lt_median_before_min": 7.367,
+  "lt_median_after_min": 7.091,
+  "lt_median_saved_s": 16.6,
+  "lt_p90_saved_s": 16.8,
+  "other_mean_saved_s": 140,
+  "held_lt": [
+   0.0522,
+   0.0421
+  ],
+  "held_other": [
+   0.29,
+   0.23
+  ],
+  "ambulances_freed_weekday_15_19_by_handover": 33.6
+ }
+}

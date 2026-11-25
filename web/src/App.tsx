@@ -11,7 +11,19 @@ import { Roller } from './components/Roller'
 import { Segmented } from './components/Segmented'
 import { layerName, prefetchLayers, useJson } from './lib/data'
 import { blockOf, savedText } from './lib/format'
-import type { Demand, MapLayer, Sev, Staging, Summary, View, ZipDetail } from './lib/types'
+import {
+  planFromQuery,
+  planLayer,
+  planStats,
+  planToQuery,
+  preset,
+  type Comp,
+  type Plan,
+  type PlanData,
+} from './lib/plan'
+import type { BoroughRow, Demand, MapLayer, Sev, Staging, Stats, Summary, View, ZipDetail } from './lib/types'
+
+const forSev = (comps: Comp[], sev: Sev) => (sev === 'lt' ? comps.filter((c) => c.cls === 'lt') : comps)
 
 function initialParams() {
   const q = new URLSearchParams(window.location.search)
@@ -47,7 +59,73 @@ export default function App() {
   const details = useJson<Record<string, ZipDetail>>('zip_detail.json')
   const staging = useJson<Staging>('staging.json')
   const demand = useJson<Demand>('demand.json')
-  const layer = useJson<MapLayer>(layerName(view, sev))
+  const pd = useJson<PlanData>('plan.json')
+  const pz = useJson<Comp[]>(view === 'opt' || selected ? 'plan_zip.json' : null)
+  const [planState, setPlan] = useState<Plan | null>(null)
+  const plan = useMemo(
+    () => planState ?? (pd ? (planFromQuery(pd, new URLSearchParams(window.location.search)) ?? preset(pd, 'combined')) : null),
+    [planState, pd],
+  )
+  const baseLayer = useJson<MapLayer>(layerName(view === 'opt' && plan?.staging ? 'opt' : 'today', sev))
+
+  // keep the URL in step so any view, zip or plan can be shared as a link
+  useEffect(() => {
+    const q = new URLSearchParams()
+    q.set('view', view)
+    q.set('sev', sev)
+    q.set('how', String(how))
+    if (selected) q.set('zip', selected)
+    if (drawer) q.set('drawer', '1')
+    if (pd && plan) for (const [k, v] of Object.entries(planToQuery(pd, plan))) q.set(k, v)
+    window.history.replaceState(null, '', `${window.location.pathname}?${q}`)
+  }, [view, sev, how, selected, drawer, pd, plan])
+
+  const zipBorough = useMemo(
+    () => Object.fromEntries(Object.entries(details ?? {}).map(([z, d]) => [z, d.borough])),
+    [details],
+  )
+  const zipComps = useMemo(() => {
+    const m: Record<string, Comp[]> = {}
+    for (const c of pz ?? []) (m[c.modzcta!] ??= []).push(c)
+    return m
+  }, [pz])
+
+  const withPlan = useCallback(
+    (today: Stats, comps: Comp[] | undefined, borough?: string): Stats =>
+      pd && plan && comps?.length ? planStats(pd, plan, forSev(comps, sev), today, borough) : today,
+    [pd, plan, sev],
+  )
+
+  const cityStats = useMemo(() => {
+    if (!summary) return null
+    const today = summary.city[sev].today
+    return { today, opt: withPlan(today, pd?.comps) }
+  }, [summary, sev, pd, withPlan])
+
+  const boroughRows = useMemo<BoroughRow[]>(() => {
+    if (!summary) return []
+    return summary.boroughs.map((r) => {
+      const comps = pd?.comps.filter((c) => c.borough === r.name)
+      const lt = pd && plan && comps?.length ? planStats(pd, plan, forSev(comps, 'lt'), r.lt.today) : r.lt.today
+      const all = pd && plan && comps?.length ? planStats(pd, plan, comps, r.all.today) : r.all.today
+      return { name: r.name, lt: { today: r.lt.today, opt: lt }, all: { today: r.all.today, opt: all } }
+    })
+  }, [summary, pd, plan])
+
+  const zipStats = useCallback(
+    (id: string | null) => {
+      const d = id ? details?.[id] : null
+      const s = d?.[sev]
+      if (!id || !d || !s) return null
+      return { today: s.today, opt: withPlan(s.today, zipComps[id], d.borough) }
+    },
+    [details, sev, zipComps, withPlan],
+  )
+
+  const layer = useMemo(
+    () => (view === 'opt' && pd && plan && baseLayer ? planLayer(pd, plan, baseLayer, zipBorough, sev) : baseLayer),
+    [view, pd, plan, baseLayer, zipBorough, sev],
+  )
 
   useEffect(() => {
     prefetchLayers()
@@ -59,14 +137,12 @@ export default function App() {
 
   const islandZipId = hoverZip ?? selected
   const islandZip = useMemo(() => {
-    if (!islandZipId || !details?.[islandZipId]) return null
-    const d = details[islandZipId]
-    const s = d[sev]
-    if (!s) return null
-    return { id: islandZipId, borough: d.borough, today: s.today, opt: s.opt }
-  }, [islandZipId, details, sev])
+    const st = zipStats(islandZipId)
+    if (!islandZipId || !st || !details) return null
+    return { id: islandZipId, borough: details[islandZipId].borough, ...st }
+  }, [islandZipId, details, zipStats])
 
-  const saved = summary ? summary.city[sev].today.median - summary.city[sev].opt.median : 0
+  const saved = cityStats ? cityStats.today.median - cityStats.opt.median : 0
   const stagingPts = staging && summary ? staging[String(summary.k_default)][String(blockOf(how))] : null
   const domain = summary ? summary.scale[sev] : ([5, 15] as [number, number])
 
@@ -81,12 +157,12 @@ export default function App() {
         </div>
         <div className="controls">
           <Segmented
-            label="Positioning"
+            label="Scenario"
             value={view}
             onChange={setView}
             options={[
               { value: 'today', label: 'Today' },
-              { value: 'opt', label: 'Optimised staging' },
+              { value: 'opt', label: 'With plan' },
             ]}
           />
           <Segmented
@@ -108,7 +184,7 @@ export default function App() {
               <span className="headline-caption">
                 <span>median saved per {sev === 'lt' ? 'life-threatening call' : 'call'}</span>
                 <span>
-                  {summary.k_default} staging points · 2025 ·{' '}
+                  {view === 'opt' ? 'With your plan' : 'With the plan'} · 2025 ·{' '}
                   <button className="about-link" onClick={() => setAbout(true)}>
                     About the data
                   </button>
@@ -131,7 +207,7 @@ export default function App() {
               how={how}
               domain={domain}
               staging={stagingPts}
-              showStaging={view === 'opt'}
+              showStaging={view === 'opt' && !!plan?.staging}
               selected={selected}
               hoverZip={hoverZip}
               onHover={setHoverZip}
@@ -143,13 +219,13 @@ export default function App() {
                 <Island
                   view={view}
                   sev={sev}
-                  city={summary.city[sev]}
+                  city={cityStats ?? summary.city[sev]}
                   zip={islandZip}
                   avoid={hoverZip ? rects.hover : rects.selected}
                   frameWidth={rects.width}
                 />
               )}
-              <Legend domain={domain} showStaging={view === 'opt'} minN={summary?.min_n ?? 20} />
+              <Legend domain={domain} showStaging={view === 'opt' && !!plan?.staging} minN={summary?.min_n ?? 20} />
               <HourSlider how={how} onChange={setHow} playing={playing} onPlay={setPlaying} />
             </MapView>
           </div>
@@ -163,7 +239,7 @@ export default function App() {
             />
           )}
         </div>
-        {summary && details ? (
+        {summary && details && cityStats ? (
           <RightPanel
             summary={summary}
             details={details}
@@ -173,6 +249,12 @@ export default function App() {
             how={how}
             selected={selected}
             onSelect={select}
+            pd={pd}
+            plan={plan ?? { units: {}, cut: 0, staging: false }}
+            onPlan={setPlan}
+            zipStats={zipStats(selected)}
+            cityStats={cityStats ?? summary.city[sev]}
+            boroughRows={boroughRows}
           />
         ) : (
           <aside className="panel">

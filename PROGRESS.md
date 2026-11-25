@@ -59,15 +59,27 @@
 - `README.md`: problem, data, method, findings with real numbers, sensitivity, limitations (aggregated locations, unknown unit origin, crew availability not modelled, travel model approximations, reporting artefacts), the app, how to run.
 - `MEMO.md`: one page of findings, recommendations and what the data cannot tell you. Every figure comes from `docs/results/`, `docs/tables/`, `docs/simulation.md` or `docs/findings.md`; per-zip staging savings added as `docs/tables/staging_saving_by_zip_k20.csv`.
 
+### 9. Capacity planner (follow-up, 2026-11-25)
+- Why: staging alone saved about 4 s, too little to act on, while held calls had doubled. The useful question was capacity: why ambulances are scarcer, and what one more free ambulance is worth.
+- `src/capacity.py` (report `docs/capacity.md`, results `docs/results/capacity_results.json`):
+  - Job length (assignment to close) grew from 65.2 to 71.4 min with flat job counts (1,573,224 vs 1,573,538). Ambulances busy on average went from 195 to 214.
+  - Two-way fixed effects (borough × year × hour of week, borough × day): +0.039 min (2.4 s, 95% CI 2.2-2.5 s) per extra busy ambulance for life-threatening calls, and +0.34 min for other calls. Placebo (another borough's busy count): −0.003 min. Holdout: slopes fitted on 2022-2024 give a 2025 bin error of 0.039 min, against 0.231 assuming no effect. Effect flattens beyond ±20 busy ambulances (under 0.2% of calls).
+- Tests: `tests/test_capacity.py` covers busy counting, shifts, and fixed-effects recovery of a known slope under confounding (31 tests pass in total).
+- App: "Optimised staging" became "With plan", with a plan card offering presets, a handover slider, a borough × shift ambulance grid and a staging switch. Live pricing (`web/src/lib/plan.ts`) updates the map, Island, headline, zip and borough figures; plans are kept in the URL. New cards: what each lever buys, why responses slowed, and the evidence. Preset results come from `web/scripts/plan-presets.ts` and are written to `docs/results/plan_presets.json`.
+- Main results: handover −10 min saves 11 s per life-threatening call and frees about 22 ambulances at the weekday 15:00-19:00 peak. Adding 15 ambulance-shifts saves 4 s, staging 4 s, and all three together 19 s.
+- Fix: the map now catches a browser without WebGL (for example Brave with graphics acceleration off) and shows a message instead of a blank page.
+- Deviation from DESIGN.md, recorded: the top-bar toggle reads "Today | With plan" instead of "Today | Optimised staging", because staging is now one of three levers.
+- Review: three screenshot passes plus a final set (`docs/screenshots/plan-pass1..3`, `plan-final`); see `docs/design_review.md`.
+
 ## Acceptance checks (PLAN.md)
 
 | # | Check | Status |
 |---|---|---|
 | 1 | Data dictionary written; 2022-2025 rows downloaded; row counts logged | Pass: `docs/data_dictionary.md`, 6,444,090 rows, `docs/ingest_row_counts.md` |
-| 2 | Quality report with counts per rule; tests pass | Pass: `docs/data_quality.md`, 19 rules; pytest 26 passed |
+| 2 | Quality report with counts per rule; tests pass | Pass: `docs/data_quality.md`, 19 rules; pytest 31 passed |
 | 3 | Breakdown tables by zip, borough, hour and severity; 3 headline findings with numbers | Pass: `docs/tables/`, `docs/findings.md` |
 | 4 | Model beats the baseline on the 2025 holdout; MAE reported | Pass: zip-hour MAE 0.445 vs 0.463; block 0.930 vs 1.021; city 7.60 vs 8.44 |
 | 5 | Travel model fitted and validated; error reported | Pass: 2025 MAE 0.67 min, R² 0.01, leave-one-borough-out reported (weak fit documented) |
 | 6 | Results for K = 10/20/30 with borough split and sensitivity | Pass: `docs/simulation.md` |
 | 7 | All views and the Island working on real data; build has no errors; three screenshot review passes; screenshots saved | Pass: `docs/design_review.md`, `docs/screenshots/` |
-| 8 | README and MEMO complete with real numbers; final commit pushed | Pass |
+| 8 | README and MEMO complete with real numbers; final commit pushed | Pass (rewritten around the capacity findings) |

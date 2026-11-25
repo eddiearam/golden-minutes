@@ -10,7 +10,8 @@ const browser = await chromium.launch({ channel: 'chrome' })
 const shots = [
   { name: '01-citywide-default', w: 1440, h: 900, q: '' },
   { name: '02-zip-selected-island', w: 1440, h: 900, q: `?zip=${zip}` },
-  { name: '03-optimised-view', w: 1440, h: 900, q: '?view=opt' },
+  { name: '03-plan-view', w: 1440, h: 900, q: '?view=opt' },
+  { name: '07-plan-handover-only', w: 1440, h: 900, q: '?view=opt&cut=10&u=000000000000000&stg=0' },
   { name: '04-heatmap-drawer', w: 1440, h: 900, q: '?drawer=1' },
   { name: '05-width-1280', w: 1280, h: 800, q: `?view=opt&zip=${zip}` },
 ]
@@ -42,12 +43,19 @@ for (let i = 0; i < 8; i++) {
 await page.mouse.move(map.x + 4, map.y + map.height - 4)
 await page.mouse.move(map.x - 40, map.y - 40)
 await page.waitForTimeout(600)
-await page.getByRole('radio', { name: 'Optimised staging' }).click()
+await page.getByRole('radio', { name: 'With plan' }).click()
 for (let i = 0; i < 6; i++) {
   await page.screenshot({ path: `${out}/island-roll-${i}.png`, clip })
   await page.waitForTimeout(80)
 }
 console.log('island state after toggle:', await island.getAttribute('data-state'))
+// every right-panel card in the plan view, one image each (the panel scrolls)
+const cards = page.locator('.panel .panel-card')
+for (let i = 0; i < (await cards.count()); i++) {
+  await cards.nth(i).scrollIntoViewIfNeeded()
+  await page.waitForTimeout(350)
+  await cards.nth(i).screenshot({ path: `${out}/panel-${i}.png` })
+}
 await page.getByRole('button', { name: 'About the data' }).click()
 await page.waitForTimeout(500)
 await page.screenshot({ path: `${out}/06-about-sheet.png` })

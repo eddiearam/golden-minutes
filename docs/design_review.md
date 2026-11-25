@@ -41,3 +41,32 @@ Checked: no page errors or console errors in any view; no overlapping controls a
 ## Follow-up: browsers that block WebGL
 
 In Brave with graphics acceleration turned off, the map could not create its WebGL context, and the error blanked the whole page right after it drew. The map now catches the failure, as well as a lost WebGL context, and shows a short message in its place. The top bar, panel and charts keep working.
+
+## Plan view: pass 1 (`docs/screenshots/plan-pass1/`)
+
+Problems found:
+- The headline caption listed the whole plan and wrapped to three lines, crowding the top bar.
+- The plan card was so tall that its results fell below the fold, and the preset chips wrapped onto two rows.
+- The evidence chart's y-axis title overlapped its tick labels.
+- Lever sub-labels wrapped to two lines.
+
+Fixes: caption shortened to "With your plan · 2025"; results moved to the top of the plan card; chip labels shortened; tighter stepper grid; wider chart margin; shorter sub-labels.
+
+## Plan view: pass 2 (`docs/screenshots/plan-pass2/`)
+
+Problems found:
+- Results rows were tall, with each note on its own line under the value.
+- The About sheet still described staging as the method behind the optimised view.
+
+Fixes: notes sit under each label with the value centred on the right; About sheet rewritten to explain the workload method, the placebo and the limits of short-run evidence.
+
+## Plan view: pass 3 (`docs/screenshots/plan-pass3/`)
+
+Problem found:
+- At 1280 px with a zip selected, the zip's figures sat below the tall plan card.
+
+Fix: when a zip is selected, its card comes first and the plan card follows.
+
+## Plan view: final (`docs/screenshots/plan-final/`)
+
+Checked: no page or console errors in any view. The headline, Island chip, zip and borough figures and map all re-price when any lever changes, and the digit roller animates each change. Presets show as pressed when the plan matches one. Steppers stop at 0 and 15. The plan survives a reload through the URL.

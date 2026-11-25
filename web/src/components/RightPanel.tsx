@@ -1,7 +1,10 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { int, min1, pct, savedChip, savedText, titleCase } from '../lib/format'
-import type { Demand, Sev, Summary, View, ZipDetail } from '../lib/types'
+import { int, min1, savedChip, titleCase } from '../lib/format'
+import { describe, emptyPlan, type Plan, type PlanData } from '../lib/plan'
+import type { BoroughRow, Demand, Sev, Stats, Summary, View, ZipDetail } from '../lib/types'
+import { Evidence, LeversChart, WhySlower } from './CapacityCharts'
 import { Breakdown, DemandLine, Fairness } from './Charts'
+import { PlanCard } from './PlanCard'
 import { ZipSearch } from './ZipSearch'
 
 interface Props {
@@ -13,21 +16,30 @@ interface Props {
   how: number
   selected: string | null
   onSelect: (z: string | null) => void
+  pd: PlanData | null
+  plan: Plan
+  onPlan: (p: Plan) => void
+  /** today and plan stats for the selected zip (or null when too few calls) and for the city */
+  zipStats: { today: Stats; opt: Stats } | null
+  cityStats: { today: Stats; opt: Stats }
+  boroughRows: BoroughRow[]
 }
 
 const SEV_LABEL = { lt: 'life-threatening calls', all: 'all calls' }
 
-export function RightPanel({ summary, details, demand, view, sev, how, selected, onSelect }: Props) {
+export function RightPanel(props: Props) {
+  const { summary, details, demand, view, sev, how, selected, onSelect, pd, plan, onPlan } = props
   const zipList = Object.entries(details).map(([id, d]) => ({ id, borough: d.borough }))
   const z = selected ? details[selected] : null
-  const zs = z ? z[sev] : null
-  const city = summary.city[sev]
-  const s = zs ?? city
+  const zs = z ? props.zipStats : null
+  const s = zs ?? props.cityStats
   const cur = view === 'opt' ? s.opt : s.today
   const showOpt = view === 'opt'
+  const planCard = pd ? <PlanCard pd={pd} plan={plan} onChange={onPlan} stagingK={summary.k_default} /> : null
 
   return (
     <aside className="panel" aria-label="Details">
+      {showOpt && pd && !selected && planCard}
       <div className="card panel-card">
         <ZipSearch zips={zipList} onSelect={onSelect} />
         <AnimatePresence mode="wait" initial={false}>
@@ -97,51 +109,62 @@ export function RightPanel({ summary, details, demand, view, sev, how, selected,
         </AnimatePresence>
       </div>
 
+      {showOpt && pd && selected && planCard}
+
       <div className="card panel-card">
         <h3 className="section-title" style={{ fontSize: 17 }}>
           Borough fairness
         </h3>
         <div className="caption">Median response, {SEV_LABEL[sev]}, 2025</div>
         <div className="inner chart-box">
-          <Fairness rows={summary.boroughs} sev={sev} highlight={z?.borough} />
+          <Fairness rows={props.boroughRows} sev={sev} highlight={z?.borough} />
           <div className="caption" style={{ display: 'flex', gap: 14, marginTop: 6 }}>
             <span>
               <Key color="#8e8e93" /> Today
             </span>
             <span>
-              <Key color="var(--green)" /> Optimised staging ({summary.k_default} points)
+              <Key color="var(--green)" /> With plan{pd ? ` (${describe(plan)})` : ''}
             </span>
           </div>
         </div>
       </div>
 
-      {!selected && (
+      {pd && (
         <div className="card panel-card">
           <h3 className="section-title" style={{ fontSize: 17 }}>
-            Staging scenarios
+            What each lever buys
           </h3>
-          <div className="caption">Life-threatening calls, 2025, staged unit assumed free</div>
+          <div className="caption">Average seconds saved per life-threatening call, 2025</div>
           <div className="inner chart-box">
-            <table className="k-table num">
-              <thead>
-                <tr>
-                  <th>Staging points</th>
-                  <th>Median saved</th>
-                  <th>p90 saved</th>
-                  <th>Calls helped</th>
-                </tr>
-              </thead>
-              <tbody>
-                {summary.k_results.map((r) => (
-                  <tr key={r.k} className={r.k === summary.k_default ? 'active' : ''}>
-                    <td>{r.k}</td>
-                    <td>{savedText(r.median_saved)}</td>
-                    <td>{savedText(r.p90_saved)}</td>
-                    <td>{pct(r.share_calls_improved)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <LeversChart pd={pd} plan={showOpt ? plan : emptyPlan(pd.boroughs)} stagingK={summary.k_default} />
+            <p className="caption on-white" style={{ marginTop: 12 }}>
+              Freeing ambulances beats moving them. Staging only shortens the drive for the few calls far from a base,
+              and only if the staged ambulance is free; shorter jobs put more ambulances back in service everywhere.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {pd && (
+        <div className="card panel-card">
+          <h3 className="section-title" style={{ fontSize: 17 }}>
+            Why responses slowed
+          </h3>
+          <div className="caption">Every assigned job, first unit, assignment to close</div>
+          <div className="inner chart-box">
+            <WhySlower pd={pd} />
+          </div>
+        </div>
+      )}
+
+      {pd && (
+        <div className="card panel-card">
+          <h3 className="section-title" style={{ fontSize: 17 }}>
+            What one free ambulance is worth
+          </h3>
+          <div className="caption">The estimate behind every saving in the plan</div>
+          <div className="inner chart-box">
+            <Evidence pd={pd} />
           </div>
         </div>
       )}
@@ -174,7 +197,7 @@ function Stat({ k, v, today, opt }: { k: string; v: number; today: number; opt: 
         <small>min</small>
       </div>
       {opt ? (
-        <div className="delta num">{savedChip(d) === 'No change' ? 'No change vs today' : `${savedChip(d)} vs today`}</div>
+        <div className="delta num">{savedChip(d) === 'No change' ? 'No change vs today' : `${savedChip(d)} with plan`}</div>
       ) : (
         <div className="delta muted">Observed 2025</div>
       )}

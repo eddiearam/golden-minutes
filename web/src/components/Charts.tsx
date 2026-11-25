@@ -12,7 +12,7 @@ const SEG = [
 /** Stacked horizontal bar of mean minutes per stage, today vs optimised. */
 export function Breakdown({ today, opt, showOpt }: { today: Stats; opt: Stats; showOpt: boolean }) {
   const reduce = useReducedMotion()
-  const rows = showOpt ? [{ label: 'Today', s: today }, { label: 'Optimised', s: opt }] : [{ label: 'Today', s: today }]
+  const rows = showOpt ? [{ label: 'Today', s: today }, { label: 'With plan', s: opt }] : [{ label: 'Today', s: today }]
   const max = Math.max(...rows.map((r) => r.s.ch + r.s.dp + r.s.tr))
   const W = 100
   return (

@@ -26,3 +26,7 @@ export const savedText = (min: number) => {
 }
 
 export const savedChip = (min: number) => (Math.round(min * 60) <= 0 ? 'No change' : `−${savedText(min)}`)
+
+/** Seconds under a minute, otherwise minutes to one decimal. */
+export const secText = (min: number) =>
+  Math.abs(min) < 1 ? `${Math.round(min * 60)}\u00a0s` : `${min.toFixed(1)}\u00a0min`
