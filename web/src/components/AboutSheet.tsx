@@ -61,7 +61,7 @@ export function AboutSheet({ summary, onClose }: { summary: Summary; onClose: ()
             <a href="https://data.cityofnewyork.us/d/ji82-xba5" target="_blank" rel="noreferrer">
               Facilities Database
             </a>{' '}
-            (NYC Planning): {summary.stations} FDNY EMS station locations.
+            (NYC Planning): {summary.stations} FDNY EMS stations and {summary.hospitals} hospitals.
           </li>
           <li>
             <a href="https://open-meteo.com/en/docs/historical-weather-api" target="_blank" rel="noreferrer">
@@ -86,8 +86,8 @@ export function AboutSheet({ summary, onClose }: { summary: Summary; onClose: ()
           same-hour four-week average.
         </p>
         <p>
-          A travel model links each zip's travel time to its distance from the nearest EMS station, its size, the time
-          of day and its borough (2025 error {summary.travel.mae_min.toFixed(2)} min per zip and time block, R²{' '}
+          A travel model links each zip's travel time to its distance from the nearest EMS station or hospital (crews
+          often take the next call as they leave a hospital), its size, the time of day, its borough and the year (2025 error {summary.travel.mae_min.toFixed(2)} min per zip and time block, R²{' '}
           {summary.travel.r2.toFixed(2)}). For each four-hour block of the week, staging points are chosen among zip
           centres to minimise forecast demand × modelled travel. The optimised view subtracts the modelled travel saving
           from each real 2025 call.
@@ -98,12 +98,13 @@ export function AboutSheet({ summary, onClose }: { summary: Summary; onClose: ()
           <li>Locations are only published at zip level, so distances run between zip centres, not addresses.</li>
           <li>
             The data does not say where the responding ambulance came from. The travel model uses distance to the
-            nearest station as a stand-in, and the station list is incomplete.
+            nearest station or hospital as a stand-in, so it explains little of the difference between zips and
+            probably understates how much distance matters.
           </li>
           <li>
             Crew availability is not modelled: the optimised view assumes a staged ambulance is free when a call
-            arrives, and that moving it does not slow other calls. The sensitivity table in the README shows results when
-            it is free only half the time.
+            arrives, and that moving it does not slow other calls. The README's sensitivity table shows results when it
+            is free only half the time.
           </li>
           <li>
             {pct(q.held_share_lt, 1)} of life-threatening calls in 2025 were held waiting for a free unit. Staging

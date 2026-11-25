@@ -18,3 +18,11 @@ export const titleCase = (s: string) =>
 export const int = (v: number) => Math.round(v).toLocaleString('en-US')
 
 export const pct = (v: number, d = 0) => `${(v * 100).toFixed(d)}%`
+
+/** Saving label: seconds when under a minute (e.g. "4 s"), otherwise minutes to 1 decimal. */
+export const savedText = (min: number) => {
+  if (!Number.isFinite(min) || min <= 0) return '0\u00a0s'
+  return min < 1 ? `${Math.round(min * 60)}\u00a0s` : `${min.toFixed(1)}\u00a0min`
+}
+
+export const savedChip = (min: number) => (Math.round(min * 60) <= 0 ? 'No change' : `−${savedText(min)}`)

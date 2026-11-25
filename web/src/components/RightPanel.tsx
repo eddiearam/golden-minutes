@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { int, min1, pct, titleCase } from '../lib/format'
+import { int, min1, pct, savedChip, savedText, titleCase } from '../lib/format'
 import type { Demand, Sev, Summary, View, ZipDetail } from '../lib/types'
 import { Breakdown, DemandLine, Fairness } from './Charts'
 import { ZipSearch } from './ZipSearch'
@@ -42,8 +42,8 @@ export function RightPanel({ summary, details, demand, view, sev, how, selected,
               <div>
                 <h2 className="section-title">{selected ? `ZIP ${selected}` : 'New York City'}</h2>
                 <div className="caption">
-                  {selected && z ? `${titleCase(z.borough)} · ` : 'Citywide · '}
-                  {SEV_LABEL[sev]}, 2025 · {int(s.today.n)} calls
+                  {selected && z ? `${titleCase(z.borough)} · ` : ''}
+                  {sev === 'lt' ? 'Life-threatening' : 'All calls'} · 2025 · {int(s.today.n)} calls
                 </div>
               </div>
               {selected && (
@@ -135,8 +135,8 @@ export function RightPanel({ summary, details, demand, view, sev, how, selected,
                 {summary.k_results.map((r) => (
                   <tr key={r.k} className={r.k === summary.k_default ? 'active' : ''}>
                     <td>{r.k}</td>
-                    <td>{min1(r.median_saved)} min</td>
-                    <td>{min1(r.p90_saved)} min</td>
+                    <td>{savedText(r.median_saved)}</td>
+                    <td>{savedText(r.p90_saved)}</td>
                     <td>{pct(r.share_calls_improved)}</td>
                   </tr>
                 ))}
@@ -174,7 +174,7 @@ function Stat({ k, v, today, opt }: { k: string; v: number; today: number; opt: 
         <small>min</small>
       </div>
       {opt ? (
-        <div className="delta num">−{min1(d)} min vs today</div>
+        <div className="delta num">{savedChip(d) === 'No change' ? 'No change vs today' : `${savedChip(d)} vs today`}</div>
       ) : (
         <div className="delta muted">Observed 2025</div>
       )}

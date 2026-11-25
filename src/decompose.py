@@ -63,6 +63,11 @@ def tables(con: duckdb.DuckDBPyConnection) -> dict[str, pd.DataFrame]:
     return out
 
 
+def signed(v: float) -> str:
+    """+0.5 / -0.3, with values that round to zero shown as 0.0 (never -0.0)."""
+    return "0.0" if abs(v) < 0.05 else f"{v:+.1f}"
+
+
 def findings(t: dict[str, pd.DataFrame]) -> list[dict]:
     """Derive headline findings from the breakdown tables. All numbers come from the tables."""
     yr = t["breakdown_year"].set_index(["yr", "severity"])
@@ -85,7 +90,8 @@ def findings(t: dict[str, pd.DataFrame]) -> list[dict]:
         f"Median response to life-threatening calls was {b.response_med:.1f} min in 2025 "
         f"(90th percentile {b.response_p90:.1f} min) versus {a.response_med:.1f} min "
         f"(p90 {a.response_p90:.1f}) in 2022. Change in the median by component: call handling "
-        f"{deltas['call_handling']:+.1f}, dispatch {deltas['dispatch']:+.1f}, travel {deltas['travel']:+.1f} min."
+        f"{signed(deltas['call_handling'])}, dispatch {signed(deltas['dispatch'])}, "
+        f"travel {signed(deltas['travel'])} min."
     )
 
     h = t["breakdown_held"]

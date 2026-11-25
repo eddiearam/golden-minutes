@@ -53,14 +53,14 @@ export function Drawer({
             <div className="drawer-body">
               {data ? (
                 <div className="heat-grid">
-                  <Heatmap values={data.actual} max={data.max} title="Actual" caption="Observed calls per hour" />
-                  <Heatmap values={data.forecast} max={data.max} title="Forecast" caption="Gradient boosting, one week ahead" />
+                  <Heatmap values={data.actual} max={data.max} title="Actual" caption="Observed, 2025" />
+                  <Heatmap values={data.forecast} max={data.max} title="Forecast" caption="One week ahead" />
                   <Heatmap
                     values={data.err}
                     max={data.emax}
                     diverging
-                    title="Forecast error"
-                    caption={`Forecast − actual · mean abs. ${data.meanAbs.toFixed(2)} calls/h`}
+                    title="Error"
+                    caption={`Forecast − actual · MAE ${data.meanAbs.toFixed(2)}/h`}
                   />
                 </div>
               ) : (

@@ -10,7 +10,7 @@ import { RightPanel } from './components/RightPanel'
 import { Roller } from './components/Roller'
 import { Segmented } from './components/Segmented'
 import { layerName, prefetchLayers, useJson } from './lib/data'
-import { blockOf, min1 } from './lib/format'
+import { blockOf, savedText } from './lib/format'
 import type { Demand, MapLayer, Sev, Staging, Summary, View, ZipDetail } from './lib/types'
 
 function initialParams() {
@@ -102,11 +102,11 @@ export default function App() {
         <div className="headline">
           {summary ? (
             <>
-              <span className="headline-value num" aria-label={`${min1(saved)} minutes saved`}>
-                −<Roller value={min1(saved)} />
+              <span className="headline-value num" aria-label={`${savedText(saved)} saved`}>
+                −<Roller value={savedText(saved)} />
               </span>
               <span className="headline-caption">
-                <span>median minutes saved</span>
+                <span>median saved per {sev === 'lt' ? 'life-threatening call' : 'call'}</span>
                 <span>
                   {summary.k_default} staging points · 2025 ·{' '}
                   <button className="about-link" onClick={() => setAbout(true)}>

@@ -84,7 +84,7 @@ export function DemandLine({ actual, forecast, how }: { actual: number[]; foreca
           <g key={t}>
             <line x1={m.l} x2={W - m.r} y1={y(t)} y2={y(t)} />
             <text x={m.l - 6} y={y(t)} dy="0.32em" textAnchor="end">
-              {t < 1 ? t.toFixed(1) : t}
+              {t === 0 ? '0' : t < 1 ? t.toFixed(1) : t}
             </text>
           </g>
         ))}
@@ -167,19 +167,17 @@ export function Heatmap({
   max: number
 }) {
   const W = 360
-  const m = { t: 4, r: 4, b: 18, l: 30 }
+  const m = { t: 2, r: 2, b: 20, l: 34 }
   const cw = (W - m.l - m.r) / 24
-  const ch = 13
+  const ch = 15
   const H = m.t + 7 * ch + m.b
   const seq = d3.scaleSequential(d3.interpolateRgb('#fdf4f4', '#b4252a')).domain([0, max])
   const div = d3.scaleDiverging(d3.interpolateRgbBasis(['#5e5ce6', '#ffffff', '#e5484d'])).domain([-max, 0, max])
   return (
     <div className="inner heat">
-      <div className="label" style={{ marginBottom: 2, color: 'var(--text)' }}>
-        {title}
-      </div>
-      <div className="caption" style={{ marginBottom: 8 }}>
-        {caption}
+      <div className="heat-head">
+        <strong>{title}</strong>
+        <span>{caption}</span>
       </div>
       <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={title}>
         {values.map((v, i) => {

@@ -57,6 +57,7 @@ export interface Summary {
   scale: { lt: [number, number]; all: [number, number] }
   min_n: number
   stations: number
+  hospitals: number
   generated: string
 }
 

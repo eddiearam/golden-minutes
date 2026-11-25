@@ -15,7 +15,7 @@ from shapely.geometry import mapping, shape
 from shapely.ops import unary_union
 
 from src.config import OUT, RAW, WEB_DATA
-from src.geo import stations, zips
+from src.geo import hospitals, stations, zips
 from src.simulate import DEFAULT_K, apply_savings, load_calls
 from src.travel import zip_borough
 
@@ -219,6 +219,7 @@ def main() -> None:
         "scale": scale,
         "min_n": MIN_N_CELL,
         "stations": int(len(stations())),
+        "hospitals": int(len(hospitals())),
         "generated": datetime.now(UTC).strftime("%Y-%m-%d"),
     }
     assert abs(summary["city"]["lt"]["today"]["n"] - len(lt)) == 0

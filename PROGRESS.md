@@ -26,7 +26,7 @@
 - Response = call handling (created → assigned) + dispatch (assigned → en route) + travel (en route → on scene), from the dataset's own timestamps. Life-threatening = initial segment 1-3 (mapping in `docs/data_dictionary.md`).
 - Tables by year, borough, zip, hour of week, severity segment and held status: `docs/tables/*.csv`; summary in `docs/findings.md`.
 - Headline findings (from `data/out/findings.json`):
-  1. Life-threatening median response 7.4 min in 2025 (p90 13.2) vs 6.8 (p90 11.8) in 2022; travel +0.5 min is most of the rise (call handling +0.1, dispatch -0.0).
+  1. Life-threatening median response 7.4 min in 2025 (p90 13.2) vs 6.8 (p90 11.8) in 2022; travel +0.5 min is most of the rise (call handling +0.1, dispatch 0.0).
   2. 5.2% of 2025 life-threatening calls were held; held median 9.5 min (p90 19.6) vs 7.3 (p90 12.9) not held. Of the 3.7 min gap in mean response, 2.2 min (60%) is travel.
   3. Of 173 zips with 200+ life-threatening calls in 2025, the 10 slowest had median 9.4 min vs 5.8 min for the 10 fastest (slowest 10464 at 11.8). Slowest hour of week Fri 18:00 (median 8.6, p90 15.7); fastest Tue 00:00 (6.4).
 
@@ -47,3 +47,10 @@
 - Results (`docs/simulation.md`, `docs/results/simulation_results.json`), median / p90 minutes saved and share of calls helped: K=10 0.033 / 0.033 (12.9%); K=20 0.067 / 0.067 (24.2%); K=30 0.089 / 0.099 (34.5%). Mean km closer: 0.26 / 0.43 / 0.57. Borough split at K=20, median saved: Staten Island 0.134, Queens 0.128, Brooklyn 0.083, Bronx 0.048, Manhattan 0.009.
 - Sensitivity: staged unit free 50% / 75% of the time, travel slope x0.75 / x1.25 / x2, demand from actual 2025 or 2022-2024 history instead of forecast, one static plan for all hours, and the final-segment life-threatening definition. At K=20 the median saved ranges from 0.033 (50% availability) to 0.133 (slope x2); plan choice and demand input change it by under 0.01 min.
 - Finding: with travel calibrated on observed data, staging alone moves response times by seconds, not minutes. Most of the citywide gap is not explained by distance from known bases (see milestone 5).
+
+### 7. App: done (2026-11-25)
+- `web/`: Vite + React + TypeScript, MapLibre GL (no basemap tiles or keys), D3 charts, Framer Motion. All data precomputed by `src/export_web.py` into `web/public/data/*.json`, split by view and severity.
+- Views: top bar (Today / Optimised staging, All / Life-threatening, headline saving), zip choropleth by hour of week with play/pause, the Island, right panel (zip search, median and p90, stage breakdown, demand line, borough fairness, staging scenarios, findings), bottom heatmap drawer (actual, forecast, error), and an About the data sheet.
+- `npm run build` passes with no errors (`tsc -b` and `eslint` clean).
+- Three screenshot review passes plus a final set: `docs/screenshots/pass1..3`, `docs/screenshots/final`, top-level copies in `docs/screenshots/`; findings and fixes in `docs/design_review.md`.
+- Deviation from DESIGN.md, recorded: the DESIGN.md secondary grey, red and green fail 4.5:1 as text on the base surface, so text uses darker values (#636366, #CE2C31, #18794E). The DESIGN.md values are kept for fills. Savings under one minute are shown in seconds, because "−0.1 min" overstates and "−0.0" hides the effect.

@@ -85,7 +85,7 @@ export function MapView(p: Props) {
         layers: [{ id: 'water', type: 'background', paint: { 'background-color': '#e8f1f8' } }],
       },
       bounds: BOUNDS,
-      fitBoundsOptions: { padding: { top: 72, bottom: 96, left: 24, right: 24 } },
+      fitBoundsOptions: { padding: { top: 72, bottom: 112, left: 24, right: 24 } },
       maxBounds: [
         [-74.6, 40.35],
         [-73.35, 41.05],
@@ -93,7 +93,7 @@ export function MapView(p: Props) {
       dragRotate: false,
       pitchWithRotate: false,
       touchPitch: false,
-      attributionControl: { compact: true, customAttribution: 'Zip boundaries: NYC DOHMH MODZCTA' },
+      attributionControl: false,
       fadeDuration: 0,
     })
     map.touchZoomRotate.disableRotation()
@@ -204,6 +204,7 @@ export function MapView(p: Props) {
     })
     const ro = new ResizeObserver(() => {
       map.resize()
+      if (!props.current.selected) map.fitBounds(BOUNDS, { padding: { top: 72, bottom: 112, left: 24, right: 24 }, duration: 0 })
       reportRects()
     })
     ro.observe(box.current)
@@ -316,14 +317,14 @@ export function MapView(p: Props) {
             [bb[2], bb[3]],
           ],
           {
-            padding: { top: 200, bottom: 120, left: 80, right: 80 },
-            maxZoom: Math.max(curZoom, 12.2),
+            padding: { top: 190, bottom: 140, left: 120, right: 120 },
+            maxZoom: Math.max(curZoom, 11.4),
             duration: reduce ? 0 : 700,
           },
         )
       }
     } else {
-      map.fitBounds(BOUNDS, { padding: { top: 72, bottom: 96, left: 24, right: 24 }, duration: reduce ? 0 : 700 })
+      map.fitBounds(BOUNDS, { padding: { top: 72, bottom: 112, left: 24, right: 24 }, duration: reduce ? 0 : 700 })
     }
   }, [ready, p.selected])
 

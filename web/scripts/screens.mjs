@@ -28,7 +28,7 @@ for (const s of shots) {
 }
 
 // Island motion: hover a zip and capture frames through the morph, then toggle views for the digit roll.
-const page = await browser.newPage({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 2 })
+const page = await browser.newPage({ viewport: { width: 1440, height: 900 }, deviceScaleFactor: 1 })
 await page.goto(base, { waitUntil: 'networkidle' })
 await page.waitForTimeout(1500)
 const island = page.getByTestId('island')
@@ -37,7 +37,7 @@ const clip = { x: map.x + map.width / 2 - 260, y: map.y, width: 520, height: 210
 await page.mouse.move(map.x + map.width * 0.6, map.y + map.height * 0.55)
 for (let i = 0; i < 8; i++) {
   await page.screenshot({ path: `${out}/island-morph-${i}.png`, clip })
-  await page.waitForTimeout(55)
+  await page.waitForTimeout(25)
 }
 await page.mouse.move(map.x + 4, map.y + map.height - 4)
 await page.mouse.move(map.x - 40, map.y - 40)
@@ -48,8 +48,13 @@ for (let i = 0; i < 6; i++) {
   await page.waitForTimeout(80)
 }
 console.log('island state after toggle:', await island.getAttribute('data-state'))
-await browser.close()
+await page.getByRole('button', { name: 'About the data' }).click()
+await page.waitForTimeout(500)
+await page.screenshot({ path: `${out}/06-about-sheet.png` })
+await Promise.race([browser.close(), new Promise((r) => setTimeout(r, 5000))])
 if (errors.length) {
   console.error('page errors:\n' + errors.join('\n'))
   process.exit(1)
 }
+console.log('no page errors')
+process.exit(0)

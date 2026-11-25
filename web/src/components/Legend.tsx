@@ -22,6 +22,7 @@ export function Legend({ domain, showStaging, minN }: { domain: [number, number]
           Staging point
         </div>
       )}
+      <div className="legend-credit">Zip boundaries: NYC DOHMH</div>
     </div>
   )
 }

@@ -1,6 +1,6 @@
 import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from 'framer-motion'
 import { useLayoutEffect, useRef, useState } from 'react'
-import { min1, titleCase } from '../lib/format'
+import { min1, savedChip, titleCase } from '../lib/format'
 import type { Sev, Stats, View } from '../lib/types'
 import { Roller } from './Roller'
 
@@ -109,7 +109,7 @@ export function Island({ view, sev, city, zip, avoid, frameWidth }: Props) {
                       exit={{ opacity: 0, width: 0, marginLeft: -8 }}
                       transition={{ duration: 0.25 }}
                     >
-                      −{min1(saved)} min
+                      {savedChip(saved)}
                     </motion.span>
                   )}
                 </AnimatePresence>
@@ -161,7 +161,7 @@ function ZipCard({
         </div>
         {view === 'opt' && (
           <div className="island-stat" style={{ alignSelf: 'flex-end', paddingBottom: 4 }}>
-            <span className="chip-saved num">−{min1(saved)} min</span>
+            <span className="chip-saved num">{savedChip(saved)}</span>
           </div>
         )}
       </div>
